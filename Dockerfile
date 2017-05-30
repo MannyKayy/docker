@@ -156,7 +156,7 @@ RUN conda install -y python=${python_version} && \
     'sqlalchemy' \
     'hdf5' &&\
 
-    conda install -y -c conda-forge pythreejs && \
+    conda install -y -c conda-forge pythreejs ipyparallel && \
 
 
     # Install  Lua, Torch, Chainer (inc. exts)
