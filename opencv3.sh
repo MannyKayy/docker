@@ -116,4 +116,3 @@ apt-get clean && apt-get update
 
 #https://github.com/opencv/opencv_contrib
 #-D OPENCV_EXTRA_MODULES_PATH=/tmp/opencv_contrib/modules \
-#pip install imutils

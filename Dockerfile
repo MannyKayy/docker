@@ -104,7 +104,6 @@ RUN cd /usr/local && git clone https://github.com/NVIDIA/nccl.git && cd nccl && 
         make install && ldconfig
 
 
-
 ###################Setup User##########################
 ENV NB_USER chainer
 ENV NB_UID 1000
@@ -168,11 +167,19 @@ RUN conda install -y python=${python_version} && \
     'hdf5' &&\
 
     conda install -y -c conda-forge pythreejs ipyparallel && \
+    conda clean -yt
+
+
+### Install OpenCV
+USER root
+COPY *.sh ./
+RUN ./opencv3.sh
+USER chainer
 
 
     # Install  Lua, Torch, Chainer (inc. exts)
-    conda install -y lua lua-science -c alexbw  && \
-    pip install mpi4py cupy && \
+RUN conda install -y lua lua-science -c alexbw  && \
+    pip install mpi4py cupy imutils && \
     pip install git+git://github.com/pfnet/chainer.git && \
     pip install chainercv chainerrl && \
     pip install chainermn && \
@@ -193,5 +200,8 @@ ENV PYTHONPATH /src/:$PYTHONPATH
 WORKDIR /src
 
 EXPOSE 8888
+
+#COPY jupyter_setup.sh /src
+#RUN /src/jupyter_setup.sh
 
 CMD jupyter notebook --no-browser --port=8888 --ip=0.0.0.0
