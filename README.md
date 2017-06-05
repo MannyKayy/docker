@@ -1,18 +1,18 @@
 # Manny's Development Container.
 This ML development container includes:
-	- chainer
-		- chainerrl
-		- chainercv
-		- chainermn
-			-NCCL
-			-mpi4py
-	- pytorch
-	- tensorflow
-	- theano
-	- keras
-	- edward
-	- spacy + textacy
-	- jupyter notebook
+- chainer
+	- chainerrl
+	- chainercv
+	- chainermn
+		- NCCL
+		- mpi4py
+- pytorch
+- tensorflow
+- theano
+- keras
+- edward
+- spacy + textacy
+- jupyter notebook
 
 
 ## Installing Docker
