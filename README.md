@@ -67,6 +67,7 @@ The default (root) username and password in this container is `chainer`.
 
 
 ### Notes
+Run `jupyter_setup.sh` to set up an ssl certificate for notebooks.
 
 This container was developed for the `single-node` environment.
 
