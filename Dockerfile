@@ -15,6 +15,9 @@ RUN mkdir -p $CONDA_DIR && \
     apt-get update -y && \
     apt-get install -y \
 
+    tmux \
+    htop \
+
     wget \
     vim \
     git \
