@@ -129,8 +129,8 @@ RUN conda install -y python=${python_version} && \
     pip install git+git://github.com/Theano/Theano.git && \
     pip install pygame && \
     pip install flask-ask && \
-    pip install ipdb pytest pytest-cov python-coveralls coverage==3.7.1 pytest-xdist pep8 pytest-pep8 pydot_ng graphviz networkx && \
-
+    pip install ipdb pytest pytest-cov python-coveralls coverage==3.7.1 pytest-xdist pep8 pytest-pep8 pydot_ng graphviz networkx gizeh && \
+    pip install git+git://github.com/mila-udem/fuel.git && \
 
     conda install \
 
