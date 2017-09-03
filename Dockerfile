@@ -200,6 +200,14 @@ ENV PYTHONPATH $CONDA_DIR/lib/python3.5/site-packages/:$PYTHONPATH
 
 ENV PYTHONPATH /src/:$PYTHONPATH
 
+RUN cd /tmp && \
+#RUN mkdir -p /tmp/pytorch && \
+    git clone https://github.com/pytorch/pytorch.git && \
+    cd pytorch && python setup.py install && \
+    git clone https://github.com/pytorch/text.git && \
+    cd text && python setup.py install && \
+    cd /tmp && rm -rf pytorch && cd ..
+
 WORKDIR /src
 
 EXPOSE 8888
