@@ -182,7 +182,7 @@ USER chainer
 
     # Install  Lua, Torch, Chainer (inc. exts)
 RUN conda install -y lua lua-science -c alexbw  && \
-    pip install mpi4py imutils && \
+    pip install mpi4py cupy imutils && \
     pip install git+git://github.com/pfnet/chainer.git && \
     pip install chainercv chainerrl && \
     pip install chainermn && \
