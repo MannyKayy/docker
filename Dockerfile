@@ -194,7 +194,8 @@ RUN conda install -y lua lua-science -c alexbw  && \
     pip install textacy && \
 
 ### PyTorch
-    conda install pytorch torchvision cuda80 -c soumith && \
+    #conda install pytorch torchvision cuda80 -c soumith && \
+    conda install pytorch -c soumith && \
     conda clean -yt
 
 ENV PYTHONPATH $CONDA_DIR/lib/python3.5/site-packages/:$PYTHONPATH
