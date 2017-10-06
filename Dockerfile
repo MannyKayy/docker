@@ -182,7 +182,7 @@ USER chainer
 
     # Install  Lua, Torch, Chainer (inc. exts)
 RUN conda install -y lua lua-science -c alexbw  && \
-    pip install mpi4py cupy imutils && \
+    pip install mpi4py imutils && \
     pip install git+git://github.com/pfnet/chainer.git && \
     pip install chainercv chainerrl && \
     pip install chainermn && \
@@ -193,20 +193,14 @@ RUN conda install -y lua lua-science -c alexbw  && \
     pip install edward==1.1.2 && \
     pip install textacy && \
 
+### PyTorch
+    conda install pytorch torchvision cuda80 -c soumith && \
     conda clean -yt
 
 ENV PYTHONPATH $CONDA_DIR/lib/python3.5/site-packages/:$PYTHONPATH
 ######################################################
 
 ENV PYTHONPATH /src/:$PYTHONPATH
-
-RUN cd /tmp && \
-#RUN mkdir -p /tmp/pytorch && \
-    git clone https://github.com/pytorch/pytorch.git && \
-    cd pytorch && python setup.py install && \
-    git clone https://github.com/pytorch/text.git && \
-    cd text && python setup.py install && \
-    cd /tmp && rm -rf pytorch && cd ..
 
 WORKDIR /src
 
