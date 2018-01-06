@@ -185,7 +185,8 @@ RUN conda install -y lua lua-science -c alexbw  && \
     pip install mpi4py cupy imutils && \
     pip install git+git://github.com/pfnet/chainer.git && \
     pip install chainercv chainerrl && \
-    pip install chainermn && \
+    pip install chainermn chainerui && \
+    chainerui db create && chainerui db upgrade && \
 
 
 ### Keras and Spacy ###
@@ -196,16 +197,20 @@ RUN conda install -y lua lua-science -c alexbw  && \
 ### PyTorch
     #conda install pytorch torchvision cuda80 -c soumith && \
     conda install pytorch -c soumith && \
+    pip install pyro-ppl && \
     conda clean -yt
 
 ENV PYTHONPATH $CONDA_DIR/lib/python3.5/site-packages/:$PYTHONPATH
+
+#RUN git clone https://github.com/facebookresearch/ParlAI.git ~/ParlAI && \
+#    cd ~/ParlAI; python setup.py develop && cd ~
 ######################################################
 
 ENV PYTHONPATH /src/:$PYTHONPATH
 
 WORKDIR /src
 
-EXPOSE 8888
+EXPOSE 8888-8898
 
 #COPY jupyter_setup.sh /src
 #RUN /src/jupyter_setup.sh

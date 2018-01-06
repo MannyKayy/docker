@@ -13,7 +13,7 @@ build:
 	docker build -t chainer --build-arg python_version=3.5 -f $(DOCKER_FILE) .
 
 bash: build
-	$(DOCKER) run --rm -p 8888:8888 -it -v $(SRC):/src -v $(DATA):/data chainer bash
+	$(DOCKER) run --rm -p 8888-8898:8888-8898 -it -v $(SRC):/src -v $(DATA):/data chainer bash
 
 ipython: build
 	$(DOCKER) run --rm -it -v $(SRC):/src -v $(DATA):/data chainer ipython
