@@ -1,5 +1,4 @@
 FROM nvidia/cuda:8.0-cudnn6-devel-ubuntu14.04
-RUN apt-get update
 
 # disable interactive functions
 ENV DEBIAN_FRONTEND noninteractive
@@ -49,8 +48,8 @@ RUN mkdir -p $CONDA_DIR && \
 
 
 #####################CMAKE########################
-ARG cmake_version=3.8
-ARG cmake_iter=2
+ARG cmake_version=3.10
+ARG cmake_iter=1
 RUN cd /usr/local/src && \
     wget http://www.cmake.org/files/v${cmake_version}/cmake-${cmake_version}.${cmake_iter}.tar.gz && \
     tar xf cmake-${cmake_version}.${cmake_iter}.tar.gz && \
@@ -63,7 +62,7 @@ RUN cd /usr/local/src && \
 
 
 #################Spark dependencies################
-ENV APACHE_SPARK_VERSION 2.0.1
+ENV APACHE_SPARK_VERSION 2.2.1
 
 
 # set default java environment variable
@@ -73,23 +72,23 @@ ENV JAVA_HOME /usr/lib/jvm/java-8-openjdk-amd64
 RUN /var/lib/dpkg/info/ca-certificates-java.postinst configure
 
 RUN cd /tmp && \
-        wget http://d3kbcqa49mib13.cloudfront.net/spark-${APACHE_SPARK_VERSION}-bin-hadoop2.7.tgz && \
+        wget http://apache.mirror.anlx.net/spark/spark-${APACHE_SPARK_VERSION}/spark-${APACHE_SPARK_VERSION}-bin-hadoop2.7.tgz && \
         tar xzf spark-${APACHE_SPARK_VERSION}-bin-hadoop2.7.tgz -C /usr/local && \
         rm spark-${APACHE_SPARK_VERSION}-bin-hadoop2.7.tgz
 RUN cd /usr/local && ln -s spark-${APACHE_SPARK_VERSION}-bin-hadoop2.7 spark
 
 
 ENV SPARK_HOME /usr/local/spark
-ENV PYTHONPATH $SPARK_HOME/python:$SPARK_HOME/python/lib/py4j-0.10.3-src.zip:$PYTHONPATH
+ENV PYTHONPATH $SPARK_HOME/python:$SPARK_HOME/python/lib/py4j-0.10.4-src.zip:$PYTHONPATH
 ##ENV SPARK_OPTS --driver-java-options=-Xms2048M
 ##:--driver-memory=16g:--driver-java-options=-Dlog4j.logLevel=info
 
 
 ########################MPI##########################
 RUN cd /tmp && \
-        wget "https://www.open-mpi.org/software/ompi/v2.1/downloads/openmpi-2.1.1.tar.gz" && \
-        tar xzf openmpi-2.1.1.tar.gz && \
-        cd openmpi-2.1.1  && \
+        wget "https://www.open-mpi.org/software/ompi/v3.0/downloads/openmpi-3.0.0.tar.gz" && \
+        tar xzf openmpi-3.0.0.tar.gz && \
+        cd openmpi-3.0.0  && \
         ./configure --with-cuda && make -j"$(nproc)" install # && ldconfig
 
 
@@ -121,11 +120,9 @@ USER chainer
 
 
 #######################Python 3#########################
-ARG python_version=3.5.2
-ARG tensorflow_version=0.10.0-cp35-cp35m
-RUN conda install -y python=${python_version} && \
-    pip install -U pip && \
-    pip install https://storage.googleapis.com/tensorflow/linux/gpu/tensorflow-${tensorflow_version}-linux_x86_64.whl && \
+#ARG python_version=3.5.2
+#ARG tensorflow_version=0.10.0-cp35-cp35m
+RUN pip install tensorflow-gpu && \ 
     pip install git+git://github.com/Theano/Theano.git && \
     pip install pygame && \
     pip install flask-ask && \
@@ -191,16 +188,14 @@ RUN conda install -y lua lua-science -c alexbw  && \
 
 ### Keras and Spacy ###
     pip install git+git://github.com/fchollet/keras.git && \
-    pip install edward==1.1.2 && \
+    pip install edward && \
     pip install textacy && \
 
 ### PyTorch
-    #conda install pytorch torchvision cuda80 -c soumith && \
-    conda install pytorch -c soumith && \
+    conda install pytorch torchvision cuda80 -c soumith && \
     pip install pyro-ppl && \
     conda clean -yt
 
-ENV PYTHONPATH $CONDA_DIR/lib/python3.5/site-packages/:$PYTHONPATH
 
 #RUN git clone https://github.com/facebookresearch/ParlAI.git ~/ParlAI && \
 #    cd ~/ParlAI; python setup.py develop && cd ~

@@ -10,7 +10,7 @@ TEST=tests/
 SRC=$(shell dirname `pwd`)
 
 build:
-	docker build -t chainer --build-arg python_version=3.5 -f $(DOCKER_FILE) .
+	docker build -t chainer -f $(DOCKER_FILE) .
 
 bash: build
 	$(DOCKER) run --rm -p 8888-8898:8888-8898 -it -v $(SRC):/src -v $(DATA):/data chainer bash
