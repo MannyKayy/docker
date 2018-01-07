@@ -193,7 +193,8 @@ RUN conda install -y lua lua-science -c alexbw  && \
 
 ### PyTorch
     conda install pytorch torchvision cuda80 -c soumith && \
-    pip install pyro-ppl && \
+    pip install pyro-ppl torchtext && \
+    pip install git+https://github.com/pytorch/tnt.git@master && \
     conda clean -yt
 
 

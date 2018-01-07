@@ -3,14 +3,19 @@ This ML development container includes:
 - chainer
 	- chainerrl
 	- chainercv
+	- chainerui
 	- chainermn
 		- NCCL
 		- mpi4py
 - pytorch
+	- torchvision
+	- torchtext 
+	- torchnet 
+	- pyro
 - tensorflow
+	- edward
 - theano
 - keras
-- edward
 - spacy + textacy
 - jupyter notebook
 
