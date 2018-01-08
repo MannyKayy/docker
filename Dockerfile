@@ -198,11 +198,13 @@ RUN conda install -y lua lua-science -c alexbw  && \
     conda clean -yt
 
 
-#RUN git clone https://github.com/facebookresearch/ParlAI.git ~/ParlAI && \
-#    cd ~/ParlAI; python setup.py develop && cd ~
+ENV PYTHONPATH /src/:$PYTHONPATH
+ENV PYTHONIOENCODING=utf-8
+
+RUN git clone https://github.com/facebookresearch/ParlAI.git ~/ParlAI && \
+    cd ~/ParlAI; python setup.py develop && cd ~
 ######################################################
 
-ENV PYTHONPATH /src/:$PYTHONPATH
 
 WORKDIR /src
 

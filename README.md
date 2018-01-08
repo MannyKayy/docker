@@ -18,6 +18,7 @@ This ML development container includes:
 - keras
 - spacy + textacy
 - jupyter notebook
+- ParlAI
 
 
 ## Installing Docker
