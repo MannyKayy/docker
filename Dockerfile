@@ -206,8 +206,6 @@ ENV PYTHONPATH /src/:$PYTHONPATH
 
 WORKDIR /src
 
-EXPOSE 8888-8898
-
 #COPY jupyter_setup.sh /src
 #RUN /src/jupyter_setup.sh
 
