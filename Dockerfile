@@ -177,7 +177,14 @@ RUN ./opencv3.sh
 USER chainer
 
 
-    # Install  Lua, Torch, Chainer (inc. exts)
+### Set the locale
+RUN locale-gen en_US.UTF-8
+ENV LANG en_US.UTF-8
+ENV LANGUAGE en_US:en
+ENV LC_ALL en_US.UTF-8
+
+
+### Install  Lua, Torch, Chainer (inc. exts)
 RUN conda install -y lua lua-science -c alexbw  && \
     pip install mpi4py cupy imutils && \
     pip install git+git://github.com/pfnet/chainer.git && \
@@ -198,13 +205,12 @@ RUN conda install -y lua lua-science -c alexbw  && \
     conda clean -yt
 
 
-ENV PYTHONPATH /src/:$PYTHONPATH
-ENV PYTHONIOENCODING=utf-8
-
 RUN git clone https://github.com/facebookresearch/ParlAI.git ~/ParlAI && \
     cd ~/ParlAI; python setup.py develop && cd ~
 ######################################################
 
+
+ENV PYTHONPATH /src/:$PYTHONPATH
 
 WORKDIR /src
 
