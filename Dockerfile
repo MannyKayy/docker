@@ -1,7 +1,14 @@
 FROM nvidia/cuda:8.0-cudnn6-devel-ubuntu14.04
+RUN apt-get update
 
 # disable interactive functions
 ENV DEBIAN_FRONTEND noninteractive
+
+### Set the locale
+RUN locale-gen en_US.UTF-8
+ENV LANG en_US.UTF-8
+ENV LANGUAGE en_US:en
+ENV LC_ALL en_US.UTF-8
 
 ############Install MiniConda, Java, Python and other dependencies##########
 ENV CONDA_DIR /opt/conda
@@ -33,6 +40,10 @@ RUN mkdir -p $CONDA_DIR && \
     libblas-dev \
     gfortran && \
 
+    ### ffmpeg
+    add-apt-repository ppa:mc3man/trusty-media -y \
+    apt-get update -y \
+    apt-get install ffmpeg gstreamer0.10-ffmpeg -y && \
 
     ### Java ###
     add-apt-repository ppa:openjdk-r/ppa -y && \
@@ -177,11 +188,6 @@ RUN ./opencv3.sh
 USER chainer
 
 
-### Set the locale
-RUN locale-gen en_US.UTF-8
-ENV LANG en_US.UTF-8
-ENV LANGUAGE en_US:en
-ENV LC_ALL en_US.UTF-8
 
 
 ### Install  Lua, Torch, Chainer (inc. exts)
@@ -202,6 +208,7 @@ RUN conda install -y lua lua-science -c alexbw  && \
     conda install pytorch torchvision cuda80 -c soumith && \
     pip install pyro-ppl torchtext && \
     pip install git+https://github.com/pytorch/tnt.git@master && \
+    pip install git+https://github.com/lanpa/tensorboard-pytorch && \
     conda clean -yt
 
 

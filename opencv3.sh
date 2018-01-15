@@ -86,12 +86,10 @@ sudo cmake \
       -D WITH_V4L=ON \
       -D WITH_VTK=ON \
       -D WITH_OPENGL=ON \
-      -D WITH_QT=ON \
       -D BUILD_EXAMPLES=OFF \
       -D WITH_IPP=OFF \
       -D WITH_GSTREAMER=YES \
       -D INSTALL_PYTHON_EXAMPLES=ON \
-      -D BUILD_NEW_PYTHON_SUPPORT=ON \
       -D WITH_CUDA=ON \
       -D CUDA_NVCC_FLAGS="-D_FORCE_INLINES" \
       -D BUILD_DOCS=ON \
@@ -100,6 +98,7 @@ sudo cmake \
       -D WITH_PVAPI=YES \
       -D WITH_TIFF=YES \
       -D WITH_XINE=ON \
+      -D PYTHON_DEFAULT_EXECUTABLE=$(which python3) \
       ..
 
 sudo make -j $(($(nproc) + 1))
@@ -116,3 +115,4 @@ apt-get clean && apt-get update
 
 #https://github.com/opencv/opencv_contrib
 #-D OPENCV_EXTRA_MODULES_PATH=/tmp/opencv_contrib/modules \
+#https://medium.com/@debugvn/installing-opencv-3-3-0-on-ubuntu-16-04-lts-7db376f93961
