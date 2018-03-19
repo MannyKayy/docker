@@ -131,12 +131,12 @@ USER chainer
 
 
 #######################Python 3#########################
-RUN \
+RUN pip install --upgrade pip && \
     pip install tensorflow-gpu && \ 
     pip install git+git://github.com/Theano/Theano.git && \
     pip install pygame flask-ask ipdb pytest pytest-cov python-coveralls coverage && \
     pip install pytest-xdist pep8 pytest-pep8 pydot_ng graphviz networkx gizeh && \
-    pip install git+git://github.com/mila-udem/fuel.git ipyparallel pythreejs && \
+    pip install git+git://github.com/mila-udem/fuel.git ipyparallel pythreejs==1.0.0 && \
     pip install jupyter jupyterlab && \
 
     conda install \
