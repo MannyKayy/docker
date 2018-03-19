@@ -10,6 +10,9 @@ jupyter nbextension install --sys-prefix --py ipyparallel
 jupyter nbextension enable --sys-prefix --py ipyparallel
 jupyter serverextension enable --sys-prefix --py ipyparallel
 
+jupyter nbextension install --py --symlink --sys-prefix pythreejs
+jupyter nbextension enable --py --sys-prefix pythreejs
+
 jupyter notebook --generate-config
 
 key=$(python -c "from notebook.auth import passwd; print(passwd())")

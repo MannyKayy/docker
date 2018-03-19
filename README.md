@@ -17,7 +17,7 @@ This ML development container includes:
 - theano
 - keras
 - spacy + textacy
-- jupyter notebook
+- jupyter lab
 - ParlAI
 
 

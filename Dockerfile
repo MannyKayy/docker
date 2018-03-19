@@ -1,4 +1,4 @@
-FROM nvidia/cuda:8.0-cudnn6-devel-ubuntu14.04
+FROM nvidia/cuda:8.0-cudnn7-devel-ubuntu14.04
 RUN apt-get update
 
 # disable interactive functions
@@ -41,8 +41,8 @@ RUN mkdir -p $CONDA_DIR && \
     gfortran && \
 
     ### ffmpeg
-    add-apt-repository ppa:mc3man/trusty-media -y \
-    apt-get update -y \
+    add-apt-repository ppa:mc3man/trusty-media -y && \
+    apt-get update -y && \
     apt-get install ffmpeg gstreamer0.10-ffmpeg -y && \
 
     ### Java ###
@@ -60,7 +60,7 @@ RUN mkdir -p $CONDA_DIR && \
 
 #####################CMAKE########################
 ARG cmake_version=3.10
-ARG cmake_iter=1
+ARG cmake_iter=3
 RUN cd /usr/local/src && \
     wget http://www.cmake.org/files/v${cmake_version}/cmake-${cmake_version}.${cmake_iter}.tar.gz && \
     tar xf cmake-${cmake_version}.${cmake_iter}.tar.gz && \
@@ -73,7 +73,7 @@ RUN cd /usr/local/src && \
 
 
 #################Spark dependencies################
-ENV APACHE_SPARK_VERSION 2.2.1
+ENV APACHE_SPARK_VERSION 2.3.0
 
 
 # set default java environment variable
@@ -131,14 +131,13 @@ USER chainer
 
 
 #######################Python 3#########################
-#ARG python_version=3.5.2
-#ARG tensorflow_version=0.10.0-cp35-cp35m
-RUN pip install tensorflow-gpu && \ 
+RUN \
+    pip install tensorflow-gpu && \ 
     pip install git+git://github.com/Theano/Theano.git && \
-    pip install pygame && \
-    pip install flask-ask && \
-    pip install ipdb pytest pytest-cov python-coveralls coverage==3.7.1 pytest-xdist pep8 pytest-pep8 pydot_ng graphviz networkx gizeh && \
-    pip install git+git://github.com/mila-udem/fuel.git && \
+    pip install pygame flask-ask ipdb pytest pytest-cov python-coveralls coverage && \
+    pip install pytest-xdist pep8 pytest-pep8 pydot_ng graphviz networkx gizeh && \
+    pip install git+git://github.com/mila-udem/fuel.git ipyparallel pythreejs && \
+    pip install jupyter jupyterlab && \
 
     conda install \
 
@@ -175,9 +174,8 @@ RUN pip install tensorflow-gpu && \
     'numba' \
     'bokeh' \
     'sqlalchemy' \
-    'hdf5' &&\
+    'hdf5' && \
 
-    conda install -y -c conda-forge pythreejs ipyparallel && \
     conda clean -yt
 
 
@@ -191,18 +189,15 @@ USER chainer
 
 
 ### Install  Lua, Torch, Chainer (inc. exts)
-RUN conda install -y lua lua-science -c alexbw  && \
-    pip install mpi4py cupy imutils && \
-    pip install git+git://github.com/pfnet/chainer.git && \
+RUN pip install mpi4py imutils && \
+    pip install cupy-cuda80==4.0.0b4 chainer==4.0.0b4 && \
     pip install chainercv chainerrl && \
     pip install chainermn chainerui && \
     chainerui db create && chainerui db upgrade && \
 
 
 ### Keras and Spacy ###
-    pip install git+git://github.com/fchollet/keras.git && \
-    pip install edward && \
-    pip install textacy && \
+    pip install keras edward textacy && \
 
 ### PyTorch
     conda install pytorch torchvision cuda80 -c soumith && \
@@ -221,7 +216,9 @@ ENV PYTHONPATH /src/:$PYTHONPATH
 
 WORKDIR /src
 
+#USER root
 #COPY jupyter_setup.sh /src
 #RUN /src/jupyter_setup.sh
+#USER chainer
 
-CMD jupyter notebook --no-browser --port=8888 --ip=0.0.0.0
+CMD jupyter lab --no-browser --port=8888 --ip=0.0.0.0 --allow-root

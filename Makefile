@@ -13,7 +13,9 @@ build:
 	docker build -t chainer -f $(DOCKER_FILE) .
 
 bash: build
-	$(DOCKER) run --rm -it --net=host -v $(SRC):/src -v $(DATA):/data chainer bash
+	xhost +local:root
+	$(DOCKER) run --rm -it -e DISPLAY -e QT_X11_NO_MITSHM=1 --privileged --net=host -v $(SRC):/src -v $(DATA):/data chainer bash
+	xhost -local:root
 
 ipython: build
 	$(DOCKER) run --rm -it -v $(SRC):/src -v $(DATA):/data chainer ipython
