@@ -190,7 +190,7 @@ USER chainer
 
 ### Install  Lua, Torch, Chainer (inc. exts)
 RUN pip install mpi4py imutils && \
-    pip install cupy-cuda80==4.0.0b4 chainer==4.0.0b4 && \
+    pip install ideep4py cupy-cuda80==4.0.0rc1 chainer==4.0.0rc1 && \
     pip install chainercv chainerrl && \
     pip install chainermn chainerui && \
     chainerui db create && chainerui db upgrade && \
