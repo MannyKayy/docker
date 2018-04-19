@@ -134,7 +134,7 @@ USER chainer
 RUN pip install --upgrade pip && \
     pip install py4j==0.10.6 tensorflow-gpu && \ 
     pip install git+git://github.com/Theano/Theano.git && \
-    pip install pygame ipdb pytest pytest-cov python-coveralls coverage && \
+    pip install potly pygame ipdb pytest pytest-cov python-coveralls coverage && \
     pip install pytest-xdist pep8 pytest-pep8 pydot_ng graphviz networkx gizeh && \
     pip install git+git://github.com/mila-udem/fuel.git ipyparallel pythreejs==1.0.0 && \
     pip install jupyter jupyterlab  && \
