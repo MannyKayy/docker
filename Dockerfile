@@ -132,12 +132,12 @@ USER chainer
 
 #######################Python 3#########################
 RUN pip install --upgrade pip && \
-    pip install tensorflow-gpu && \ 
+    pip install py4j==0.10.6 tensorflow-gpu && \ 
     pip install git+git://github.com/Theano/Theano.git && \
-    pip install pygame flask-ask ipdb pytest pytest-cov python-coveralls coverage && \
+    pip install pygame ipdb pytest pytest-cov python-coveralls coverage && \
     pip install pytest-xdist pep8 pytest-pep8 pydot_ng graphviz networkx gizeh && \
     pip install git+git://github.com/mila-udem/fuel.git ipyparallel pythreejs==1.0.0 && \
-    pip install jupyter jupyterlab && \
+    pip install jupyter jupyterlab  && \
 
     conda install \
 
@@ -190,7 +190,7 @@ USER chainer
 
 ### Install  Lua, Torch, Chainer (inc. exts)
 RUN pip install mpi4py imutils && \
-    pip install ideep4py cupy-cuda80==4.0.0rc1 chainer==4.0.0rc1 && \
+    pip install --no-cache-dir ideep4py cupy-cuda80==5.0.0a1 chainer==5.0.0a1 && \
     pip install chainercv chainerrl && \
     pip install chainermn chainerui && \
     chainerui db create && chainerui db upgrade && \
