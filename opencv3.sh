@@ -60,6 +60,8 @@ sudo apt-get update -y && \
      frei0r-plugins 
 
 sudo ldconfig
+sudo apt-get clean
+sudo apt-get update --fix-missing -y
 
 cd /tmp/
 sudo git clone https://github.com/opencv/opencv.git
@@ -80,8 +82,8 @@ sudo cmake \
       -D PYTHON3_LIBRARY=/opt/conda/lib/libpython3.so \
       -D PYTHON_LIBRARY=/opt/conda/lib/libpython3.so \
       -D PYTHON3_LIBRARY=/opt/conda/lib/libpython3.so \
-      -D PYTHON3_PACKAGES_PATH=/opt/conda/lib/python3.5/site-packages \
-      -D PYTHON3_NUMPY_INCLUDE_DIRS=/opt/conda/lib/python3.5/site-packages/numpy/core/include/ \
+      -D PYTHON3_PACKAGES_PATH=/opt/conda/lib/python3.7/site-packages \
+      -D PYTHON3_NUMPY_INCLUDE_DIRS=/opt/conda/lib/python3.7/site-packages/numpy/core/include/ \
       -D CMAKE_LIBRARY_PATH=/usr/local/cuda/lib64/stubs/ \
       -D WITH_V4L=ON \
       -D WITH_VTK=ON \
@@ -98,7 +100,14 @@ sudo cmake \
       -D WITH_PVAPI=YES \
       -D WITH_TIFF=YES \
       -D WITH_XINE=ON \
-      -D PYTHON_DEFAULT_EXECUTABLE=$(which python3) \
+      -D ENABLE_AVX=ON \
+      -D WITH_OPENGL=ON \
+      -D WITH_EIGEN=ON \
+      -D CMAKE_INSTALL_PREFIX=$(python3.7 -c "import sys; print(sys.prefix)") \
+      -D PYTHON3_EXECUTABLE=$(which python3.7) \
+      -D PYTHON3_INCLUDE_DIR=$(python3.7 -c "from distutils.sysconfig import get_python_inc; print(get_python_inc())") \
+      -D PYTHON3_PACKAGES_PATH=$(python3.7 -c "from distutils.sysconfig import get_python_lib; print(get_python_lib())") ..
+      -D PYTHON_DEFAULT_EXECUTABLE=$(which python3.7) \
       ..
 
 sudo make -j $(($(nproc) + 1))

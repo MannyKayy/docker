@@ -19,7 +19,7 @@ RUN mkdir -p $CONDA_DIR && \
     echo export PATH=$CONDA_DIR/bin:'$PATH' > /etc/profile.d/conda.sh && \
 
     apt-get update -y && \
-    apt-get install -y \
+    apt-get install -y --no-install-recommends \
 
     tmux \
     htop \
@@ -33,6 +33,10 @@ RUN mkdir -p $CONDA_DIR && \
     software-properties-common \
     python-software-properties \
     python3-dev \
+
+    libffi-dev \
+    libssl-dev \
+    openssh-client \
 
     libhdf5-dev \
     libopenblas-dev \
@@ -59,7 +63,7 @@ RUN mkdir -p $CONDA_DIR && \
 
 
 #####################CMAKE########################
-ARG cmake_version=3.10
+ARG cmake_version=3.12
 ARG cmake_iter=3
 RUN cd /usr/local/src && \
     wget http://www.cmake.org/files/v${cmake_version}/cmake-${cmake_version}.${cmake_iter}.tar.gz && \
@@ -73,7 +77,7 @@ RUN cd /usr/local/src && \
 
 
 #################Spark dependencies################
-ENV APACHE_SPARK_VERSION 2.3.0
+ENV APACHE_SPARK_VERSION 2.3.2
 
 
 # set default java environment variable
@@ -90,34 +94,26 @@ RUN cd /usr/local && ln -s spark-${APACHE_SPARK_VERSION}-bin-hadoop2.7 spark
 
 
 ENV SPARK_HOME /usr/local/spark
-ENV PYTHONPATH $SPARK_HOME/python:$SPARK_HOME/python/lib/py4j-0.10.4-src.zip:$PYTHONPATH
+ENV PYTHONPATH $SPARK_HOME/python:$SPARK_HOME/python/lib/py4j-0.10.7-src.zip:$PYTHONPATH
 ##ENV SPARK_OPTS --driver-java-options=-Xms2048M
 ##:--driver-memory=16g:--driver-java-options=-Dlog4j.logLevel=info
 
 
 ########################MPI##########################
 RUN cd /tmp && \
-        wget "https://www.open-mpi.org/software/ompi/v3.0/downloads/openmpi-3.0.0.tar.gz" && \
-        tar xzf openmpi-3.0.0.tar.gz && \
-        cd openmpi-3.0.0  && \
-        ./configure --with-cuda && make -j"$(nproc)" install # && ldconfig
+        wget "https://download.open-mpi.org/release/open-mpi/v3.1/openmpi-3.1.2.tar.gz" && \
+        tar xzf openmpi-3.1.2.tar.gz && \
+        cd openmpi-3.1.2  && \
+        ./configure --with-cuda && make -j"$(nproc)" install && ldconfig
+        #ompi_info --parsable --all | grep -q "mpi_built_with_cuda_support:value:true" # && ldconfig
 
-
-
-#######################NCCL###########################
+########################NCCL###########################
 ENV CPATH /usr/local/cuda/include:/usr/local/include:$CPATH
-RUN cd /usr/local && git clone https://github.com/NVIDIA/nccl.git && cd nccl && \
+#RUN cd /usr/local && git clone https://github.com/NVIDIA/nccl.git && cd nccl && \
+#        make CUDA_HOME=/usr/local/cuda -j"$(nproc)" && \
+#        make install && ldconfig
 
-######### Compile for devices with cuda compute compatibility 3 (e.g. GRID K520 on aws)
-# UNCOMMENT line below to compile for GPUs with cuda compute compatibility 3.0
-#        sed -i '/NVCC_GENCODE ?=/a \                -gencode=arch=compute_30,code=sm_30 \\' Makefile && \
-##########
-
-        make CUDA_HOME=/usr/local/cuda -j"$(nproc)" && \
-        make install && ldconfig
-
-
-###################Setup User##########################
+####################Setup User##########################
 ENV NB_USER chainer
 ENV NB_UID 1000
 
@@ -129,90 +125,92 @@ RUN useradd -m -s /bin/bash -N -u $NB_UID $NB_USER -g sudo -p $(perl -e'print cr
 
 USER chainer
 
-
 #######################Python 3#########################
-RUN pip install --upgrade pip && \
-    pip install py4j==0.10.6 tensorflow-gpu && \ 
-    pip install git+git://github.com/Theano/Theano.git && \
-    pip install potly pygame ipdb pytest pytest-cov python-coveralls coverage && \
-    pip install pytest-xdist pep8 pytest-pep8 pydot_ng graphviz networkx gizeh && \
-    pip install git+git://github.com/mila-udem/fuel.git ipyparallel pythreejs==1.0.0 && \
-    pip install jupyter jupyterlab  && \
+#RUN conda config --set channel_priority false
+RUN conda install python=3.6
+RUN pip install --upgrade pip
 
-    conda install \
-
-    'Pillow' \
-    'scikit-learn' \
-    'notebook' \
-    'pandas' \
-    'matplotlib' \
-    'nose' \
-    'pyyaml' \
-    'six' \
-    'h5py' \
-
-    'numpy' \
-    'mock' \
-
-    'jsonschema' \
-    'boto' \
-
-    'nomkl' \
-    'ipywidgets' \
-    'pandas' \
-    'numexpr' \
-    'scipy' \
-    'seaborn' \
-    'scikit-learn' \
-    'scikit-image' \
-    'sympy' \
-    'cython' \
-    'patsy' \
-    'statsmodels' \
-    'cloudpickle' \
-    'dill' \
-    'numba' \
-    'bokeh' \
-    'sqlalchemy' \
-    'hdf5' && \
-
-    conda clean -yt
+RUN pip install py4j==0.10.7 plotly pygame ipdb pytest pytest-cov python-coveralls coverage && \
+    pip install pytest-xdist pep8 pytest-pep8 pydot_ng graphviz networkx gizeh
+RUN pip install opencv-contrib-python
+RUN pip install imutils pipdate pythreejs 
+RUN pip install jupyter jupyterlab 
 
 
-### Install OpenCV
-USER root
-COPY *.sh ./
-RUN ./opencv3.sh
-USER chainer
-
-
-
-
-### Install  Lua, Torch, Chainer (inc. exts)
-RUN pip install mpi4py imutils && \
-    pip install --no-cache-dir ideep4py cupy-cuda80==5.0.0a1 chainer==5.0.0a1 && \
-    pip install chainercv chainerrl && \
-    pip install chainermn chainerui && \
-    chainerui db create && chainerui db upgrade && \
-
-
-### Keras and Spacy ###
-    pip install keras edward textacy && \
 
 ### PyTorch
-    conda install pytorch torchvision cuda80 -c soumith && \
-    pip install pyro-ppl torchtext && \
-    pip install git+https://github.com/pytorch/tnt.git@master && \
-    pip install git+https://github.com/lanpa/tensorboard-pytorch && \
-    conda clean -yt
+RUN conda install -c pytorch -c fastai fastai pytorch-nightly torchvision-nightly magma-cuda80
+RUN pip install pyro-ppl 
+RUN pip install torchtext 
+RUN pip install gpytorch
+RUN pip install git+https://github.com/pytorch/tnt.git@master 
 
+## TF, Keras, Mxnet and Theano
+RUN conda install theano 
+RUN pip install tensorflow
+RUN pip install keras #libgcc 
+RUN pip install mxnet-cu80
+
+### Edward, tensorly, allennlp, textacy
+RUN pip install edward textacy 
+RUN pip install tensorly allennlp
+RUN pip install git+https://github.com/neka-nat/tensorboard-chainer.git
+#RUN pip install git+https://github.com/lanpa/tensorboard-pytorch
+
+RUN conda install \
+
+    'ipyparallel' \
+    'bokeh' \
+    'cloudpickle' \
+    'cython' \
+    'hdf5' \
+    'numba' \
+    'numexpr' \
+    'pandas' \
+    'patsy' \
+    'pyyaml' \
+    'scikit-learn' \
+    'scikit-image' \
+    'seaborn' \
+    'sqlalchemy' \
+    'statsmodels' \
+    'sympy'
+#    'pillow' \
+#    'notebook' \
+#    'matplotlib' \
+#    'nose' \
+#    'six' \
+#    'h5py' \
+#    'numpy' \
+#    'mock' \
+#    'jsonschema' \
+#    'boto' \
+   # 'nomkl' \
+#    'ipywidgets' \
+#    'scipy' \
+#    'dill' \
+
+#RUN conda config --set channel_priority true
+#RUN conda update --all
+RUN conda clean -yt
 
 RUN git clone https://github.com/facebookresearch/ParlAI.git ~/ParlAI && \
     cd ~/ParlAI; python setup.py develop && cd ~
 ######################################################
+### Install Chainer (inc. exts)
+RUN pip install ideep4py
+RUN pip install mpi4py
+#RUN conda install -c intel ideep4py
+RUN pip install --no-cache-dir cupy-cuda80==6.0.0a1 chainer==6.0.0a1
+RUN pip install chainercv chainerrl chainerui && \
+    chainerui db create && chainerui db upgrade
+
+ENV CHAINER_USE_IDEEP 'auto'
+######################################################
 
 
 ENV PYTHONPATH /src/:$PYTHONPATH
+ENV LD_PRELOAD $CONDA_DIR/lib/libstdc++.so.6.0.25
 
 WORKDIR /src
 
@@ -221,4 +219,4 @@ WORKDIR /src
 #RUN /src/jupyter_setup.sh
 #USER chainer
 
-CMD jupyter lab --no-browser --port=8888 --ip=0.0.0.0 --allow-root
+CMD jupyter lab --no-browser --port=8890 --ip=0.0.0.0 --allow-root
