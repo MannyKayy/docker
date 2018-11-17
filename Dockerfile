@@ -130,32 +130,32 @@ USER chainer
 RUN conda install python=3.6
 RUN pip install --upgrade pip
 
-RUN pip install py4j==0.10.7 plotly pygame ipdb pytest pytest-cov python-coveralls coverage && \
-    pip install pytest-xdist pep8 pytest-pep8 pydot_ng graphviz networkx gizeh
-RUN pip install opencv-contrib-python
-RUN pip install imutils pipdate pythreejs 
-RUN pip install jupyter jupyterlab 
+RUN pip install --no-cache-dir  py4j==0.10.7 plotly pygame ipdb pytest pytest-cov python-coveralls coverage && \
+    pip install --no-cache-dir  pytest-xdist pep8 pytest-pep8 pydot_ng graphviz networkx gizeh
+RUN pip install --no-cache-dir  opencv-contrib-python
+RUN pip install --no-cache-dir  imutils pipdate pythreejs 
+RUN pip install --no-cache-dir  jupyter jupyterlab 
 
 
 
 ### PyTorch
 RUN conda install -c pytorch -c fastai fastai pytorch-nightly torchvision-nightly magma-cuda80
-RUN pip install pyro-ppl 
-RUN pip install torchtext 
-RUN pip install gpytorch
-RUN pip install git+https://github.com/pytorch/tnt.git@master 
+RUN pip install --no-cache-dir  pyro-ppl 
+RUN pip install --no-cache-dir  torchtext 
+RUN pip install --no-cache-dir  gpytorch
+RUN pip install --no-cache-dir  git+https://github.com/pytorch/tnt.git@master 
 
 ## TF, Keras, Mxnet and Theano
 RUN conda install theano 
-RUN pip install tensorflow
-RUN pip install keras #libgcc 
-RUN pip install mxnet-cu80
+RUN pip install --no-cache-dir  tensorflow-gpu
+RUN pip install --no-cache-dir  keras #libgcc 
+RUN pip install --no-cache-dir  mxnet-cu80
 
 ### Edward, tensorly, allennlp, textacy
-RUN pip install edward textacy 
-RUN pip install tensorly allennlp
-RUN pip install git+https://github.com/neka-nat/tensorboard-chainer.git
-#RUN pip install git+https://github.com/lanpa/tensorboard-pytorch
+RUN pip install --no-cache-dir  edward textacy 
+RUN pip install --no-cache-dir  tensorly #allennlp
+RUN pip install --no-cache-dir  git+https://github.com/neka-nat/tensorboard-chainer.git
+#RUN pip install --no-cache-dir  git+https://github.com/lanpa/tensorboard-pytorch
 
 RUN conda install \
 
@@ -198,11 +198,11 @@ RUN git clone https://github.com/facebookresearch/ParlAI.git ~/ParlAI && \
     cd ~/ParlAI; python setup.py develop && cd ~
 ######################################################
 ### Install Chainer (inc. exts)
-RUN pip install ideep4py
-RUN pip install mpi4py
+RUN pip install --no-cache-dir  ideep4py
+RUN pip install --no-cache-dir  mpi4py
 #RUN conda install -c intel ideep4py
 RUN pip install --no-cache-dir cupy-cuda80==6.0.0a1 chainer==6.0.0a1
-RUN pip install chainercv chainerrl chainerui && \
+RUN pip install --no-cache-dir  chainercv chainerrl chainerui && \
     chainerui db create && chainerui db upgrade
 
 ENV CHAINER_USE_IDEEP 'auto'

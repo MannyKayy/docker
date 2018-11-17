@@ -30,5 +30,5 @@ c.NotebookApp.certfile = u'$certdir/mycert.pem'\\
 c.NotebookApp.ip = '0.0.0.0'\\
 c.NotebookApp.open_browser = False\\
 c.NotebookApp.password = u'$key'\\
-c.NotebookApp.port = 8890" .jupyter/jupyter_notebook_config.py
+c.NotebookApp.port = 8888" .jupyter/jupyter_notebook_config.py
 
