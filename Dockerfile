@@ -30,6 +30,8 @@ RUN mkdir -p $CONDA_DIR && \
     g++ \
     graphviz \
 
+    sshfs \
+
     software-properties-common \
     python-software-properties \
     python3-dev \
