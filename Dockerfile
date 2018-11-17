@@ -149,13 +149,13 @@ RUN pip install --no-cache-dir  git+https://github.com/pytorch/tnt.git@master
 
 ## TF, Keras, Mxnet and Theano
 RUN conda install theano 
-RUN pip install --no-cache-dir  tensorflow-gpu
+RUN pip install --no-cache-dir  tensorflow-gpu==1.4.1 #Due to cuda 8.0 constraint
 RUN pip install --no-cache-dir  keras #libgcc 
 RUN pip install --no-cache-dir  mxnet-cu80
 
 ### Edward, tensorly, allennlp, textacy
 RUN pip install --no-cache-dir  edward textacy 
-RUN pip install --no-cache-dir  tensorly #allennlp
+RUN pip install --no-cache-dir  tensorly #allennlp # causes issues during install (i.e. pip stops working)
 RUN pip install --no-cache-dir  git+https://github.com/neka-nat/tensorboard-chainer.git
 #RUN pip install --no-cache-dir  git+https://github.com/lanpa/tensorboard-pytorch
 
