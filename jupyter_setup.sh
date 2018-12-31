@@ -15,20 +15,29 @@ jupyter nbextension enable --py --sys-prefix pythreejs
 
 jupyter notebook --generate-config
 
-key=$(python -c "from notebook.auth import passwd; print(passwd())")
+#key=$(python -c "from notebook.auth import passwd; print(passwd())")
 
-cd ~
-mkdir certs
-cd certs
-certdir=$(pwd)
-openssl req -x509 -nodes -days 365 -newkey rsa:1024 -keyout mycert.pem -out mycert.pem
+#cd ~
+#mkdir certs
+#cd certs
+#certdir=$(pwd)
+#openssl req -x509 -nodes -days 365 -newkey rsa:1024 -keyout mycert.pem -out mycert.pem
+#
+#cd ~
+#sed -i "1 a\
+#c = get_config()\\
+#c.NotebookApp.certfile = u'$certdir/mycert.pem'\\
+#c.NotebookApp.ip = '0.0.0.0'\\
+#c.NotebookApp.open_browser = False\\
+#c.NotebookApp.password = u'$key'\\
+#c.NotebookApp.port = 8888" .jupyter/jupyter_notebook_config.py
 
 cd ~
 sed -i "1 a\
 c = get_config()\\
-c.NotebookApp.certfile = u'$certdir/mycert.pem'\\
+c.NotebookApp.certfile = ''\\
 c.NotebookApp.ip = '0.0.0.0'\\
 c.NotebookApp.open_browser = False\\
-c.NotebookApp.password = u'$key'\\
+c.NotebookApp.password = ''\\
+c.NotebookApp.token = ''\\
 c.NotebookApp.port = 8888" .jupyter/jupyter_notebook_config.py
-
